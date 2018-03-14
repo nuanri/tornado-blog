@@ -9,6 +9,7 @@ from tornado.options import define, options
 
 from urls import handlers
 from database import get_db_session
+from settings import SECRET_KEY
 
 define("port", default=8888)
 
@@ -20,7 +21,7 @@ class Application(tornado.web.Application):
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=False,
-            cookie_secret="",
+            cookie_secret=SECRET_KEY,
             debug=True,
         )
 

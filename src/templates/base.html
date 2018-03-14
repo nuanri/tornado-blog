@@ -43,12 +43,17 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">登陆</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">注册</a>
-            </li>
+            % if current_user:
+              <li class="nav-item"><a class="nav-link" href="${reverse_url('auth:userinfo')}">${ current_user.username }</a></li>
+              <li class="nav-item"><a class="nav-link" href="${ reverse_url('auth:logout') }">退出</a></li>
+            % else:
+              <li class="nav-item">
+                <a class="nav-link" href="${ reverse_url('auth:login') }">登陆</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="${ reverse_url('auth:register') }">注册</a>
+              </li>
+            % endif
           </ul>
         </div>
       </div>

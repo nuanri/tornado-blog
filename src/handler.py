@@ -4,6 +4,8 @@ import mako.lookup
 
 import tornado.web
 
+from model.auth import User
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -57,4 +59,9 @@ class BaseHandler(tornado.web.RequestHandler):
         self.application.db_session.remove()
 
     def get_current_user(self):
-        pass
+        user_id = self.get_secure_cookie("blog_user")
+        if not user_id:
+            return None
+        user = self.db.query(User).filter_by(id=int(user_id)).first()
+        print("user ==>", user)
+        return user

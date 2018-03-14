@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey,\
     DateTime, Table, Sequence, Boolean
 from database import ORMBase
+from utils.enc import check_password
 
 
 class User(ORMBase):
@@ -12,7 +13,7 @@ class User(ORMBase):
     nickname = Column(String(30))
     email = Column(String(64), unique=True)
     img = Column(String(1024))
-    password = Column(String(128))
+    password = Column(String(512))
     is_admin = Column(Boolean, default=False)
     is_lock = Column(Boolean, default=False)
     date_joined = Column(DateTime())
@@ -21,3 +22,6 @@ class User(ORMBase):
     def __init__(self, username, email):
         self.username = username
         self.email = email
+
+    def validate_password(self, raw_password):
+        return check_password(raw_password, self.password)

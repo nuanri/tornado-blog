@@ -14,7 +14,6 @@ def get_db_session():
     engine = create_engine(DB_URI, echo=True)
     session_factory = sessionmaker(bind=engine)
     session = scoped_session(session_factory)
-    print("session1 = ", session)
     return session
 
 
