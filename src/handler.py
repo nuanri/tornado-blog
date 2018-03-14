@@ -2,6 +2,9 @@ import mako
 # from mako.exceptions import RichTraceback
 import mako.lookup
 
+import functools
+
+import tornado
 import tornado.web
 
 from model.auth import User
@@ -63,5 +66,13 @@ class BaseHandler(tornado.web.RequestHandler):
         if not user_id:
             return None
         user = self.db.query(User).filter_by(id=int(user_id)).first()
-        print("user ==>", user)
         return user
+
+    def authenticated(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            if not self.current_user:
+                raise tornado.web.HTTPError(403, reason="need_auth")
+            return method(self, *args, **kwargs)
+
+        return wrapper

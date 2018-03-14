@@ -7,6 +7,7 @@ handlers = [
     url(r"/login", auth.LoginHandler, name="auth:login"),
     url(r"/logout", auth.LogoutHandler, name="auth:logout"),
     url(r"/userinfo", auth.UserinfoHandler, name="auth:userinfo"),
+    url(r"/upload", auth.UploadHandler, name="auth:upload"),
 
     url(r"/", article.IndexHandler, name="article:index"),
 ]

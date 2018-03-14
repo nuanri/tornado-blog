@@ -17,3 +17,8 @@ class LoginForm(Form):
     password = PasswordField(
         'New Password', [validators.Required()]
     )
+
+
+# class UserinfoForm(Form):
+#     username = StringField('Username', [validators.Length(min=6, max=32)])
+#     email = TextField('Email Address', [validators.Length(min=6, max=35)])

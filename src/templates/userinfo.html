@@ -1,6 +1,28 @@
 <%inherit file="base.html"/>
 
 <%block name="content">
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <!-- <img src="${ static_url('uploads/') } self.current_user.img" alt="..." class="img-thumbnail"> -->
+      <img src="${ static_url('uploads/')}${ current_user.img }" alt="..." class="img-thumbnail">
+      <a href="${ reverse_url('auth:upload')}" class="btn btn-primary">更换头像</a>
+    </div>
 
+    <div class="col-md-9">
+      <table class="table table-hover">
+        <tr><td>用户ID</td><td>${ current_user.id }</td></tr>
+        <tr><td>管理员</td><td>${ current_user.is_admin }</td></tr>
+        <tr><td>用户名</td><td>${ current_user.username }</td></tr>
+        <tr><td>邮箱</td><td>${ current_user.email }</td></tr>
+        <tr><td>别名</td><td>${ current_user.nickname }</td></tr>
+        <tr><td>是否锁定</td><td>${ current_user.is_lock }</td></tr>
+        <tr><td>加入时间</td><td>${ current_user.date_joined }</td></tr>
+        <tr><td>登陆时间</td><td>${ current_user.last_login }</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
 
 </%block>
