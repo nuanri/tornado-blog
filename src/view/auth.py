@@ -4,7 +4,7 @@ from tornado.web import authenticated
 
 from handler import BaseHandler
 from model.auth import User
-from form.auth import RegisterForm, LoginForm
+from form.auth import RegisterForm, LoginForm, UserinfoEditForm
 from utils.enc import encrypt_password
 
 
@@ -58,11 +58,50 @@ class UserinfoHandler(BaseHandler):
     @authenticated
     def get(self):
         # user = self.db.query(User).filter_by(id=ID).first()
-
         self.render("userinfo.html")
 
+
+class UserinfoEditHandler(BaseHandler):
+
+    @authenticated
+    def get(self):
+        form = UserinfoEditForm(self)
+        form.username.data = self.current_user.username
+        form.email.data = self.current_user.email
+        form.nickname.data = self.current_user.nickname
+
+        self.render("userinfo_edit.html", form=form)
+
+    @authenticated
     def post(self):
-        pass
+        form = UserinfoEditForm(self)
+        err = {}
+        if form.validate():
+            user = self.db.query(User).filter_by(
+                id=self.current_user.id
+            ).first()
+            u_username = self.db.query(User).filter(
+                User.id != self.current_user.id,
+                User.username == form.username.data
+            ).first()
+            if u_username:
+                err["username"] = ["用户名{}已被占用".format(u_username.username)]
+            u_email = self.db.query(User).filter(
+                User.id != self.current_user.id,
+                User.email == form.email.data
+            ).first()
+            if u_email:
+                err["emial"] = ["邮箱{}已被占用".format(u_email.email)]
+            if len(err) != 0:
+                self.render("userinfo_edit.html", form=form, message=err)
+            user.username = form.username.data
+            user.email = form.email.data
+            if form.nickname.data:
+                user.nickname = form.nickname.data
+            self.db.commit()
+            self.render("userinfo.html", form=form)
+        else:
+            self.render("userinfo_edit.html", form=form, message=form.errors)
 
 
 class UploadHandler(BaseHandler):

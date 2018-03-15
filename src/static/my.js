@@ -28,3 +28,19 @@
 //         }
 //     });
 // })
+
+// $('#file-button').click(function(){
+//   var files = $('#InputFile').prop('files');
+//
+//   var data = new FormData();
+//   data.append('file', files[0]);
+//
+//   $.ajax({
+//       url: '/upload',
+//       type: 'POST',
+//       data: data,
+//       cache: false,
+//       processData: false,
+//       contentType: false
+//   });
+// });
