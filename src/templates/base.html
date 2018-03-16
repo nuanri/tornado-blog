@@ -43,18 +43,35 @@
             <li class="nav-item">
               <a class="nav-link" href="#">Contact</a>
             </li>
-            % if current_user:
-              <li class="nav-item"><a class="nav-link" href="${reverse_url('auth:userinfo')}">${ current_user.username }</a></li>
-              <li class="nav-item"><a class="nav-link" href="${ reverse_url('auth:logout') }">退出</a></li>
-            % else:
-              <li class="nav-item">
-                <a class="nav-link" href="${ reverse_url('auth:login') }">登陆</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="${ reverse_url('auth:register') }">注册</a>
-              </li>
-            % endif
+
+
+
+          % if current_user:
+            <div class="dropdown">
+               <a class="nav-link dropdown-toggle" data-target="#" href="#" id="dropdownMenu1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                ${ current_user.username }
+                <span class="caret"></span>
+              </a>
+              <ul style="padding:15px; color:black" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                <li style="padding:5px 0px"><a style="color:black" href="${ reverse_url('auth:profile') }">账户信息</a></li>
+                % if current_user.is_admin:
+                  <li style="padding:5px 0px"><a style="color:black" href="${ reverse_url('admin:userlist') }">用户列表</a></li>
+                % endif
+                <!-- <li role="separator" class="divider"></li> -->
+                <hr/>
+                <li style="padding:5px 0px"><a style="color:black" href="${ reverse_url('auth:logout') }">退出</a></li>
+              </ul>
+            </div>
+          % else:
+            <li class="nav-item">
+              <a class="nav-link" href="${ reverse_url('auth:login') }">登陆</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="${ reverse_url('auth:register') }">注册</a>
+            </li>
           </ul>
+          % endif
+
         </div>
       </div>
     </nav>

@@ -19,7 +19,7 @@ class LoginForm(Form):
     )
 
 
-class UserinfoEditForm(Form):
+class ProfileEditForm(Form):
     username = StringField('Username', [validators.Length(min=6, max=32)])
     nickname = StringField('Nickname', [validators.Length(min=0, max=32)])
     email = TextField('Email Address', [validators.Length(min=6, max=35)])

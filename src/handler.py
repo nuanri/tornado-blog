@@ -68,11 +68,42 @@ class BaseHandler(tornado.web.RequestHandler):
         user = self.db.query(User).filter_by(id=int(user_id)).first()
         return user
 
-    def authenticated(method):
-        @functools.wraps(method)
-        def wrapper(self, *args, **kwargs):
-            if not self.current_user:
-                raise tornado.web.HTTPError(403, reason="need_auth")
-            return method(self, *args, **kwargs)
+    # def authenticated(method):
+    #     @functools.wraps(method)
+    #     def wrapper(self, *args, **kwargs):
+    #         if not self.current_user:
+    #             raise tornado.web.HTTPError(403, reason="need_auth")
+    #         return method(self, *args, **kwargs)
+    #
+    #     return wrapper
 
-        return wrapper
+
+# def administrator(method):
+#
+#     @functools.wraps(method)
+#     def wrapper(self, *args, **kwargs):
+#         if self.current_user:
+#             if self.current_user.is_superuser:
+#                 return method(self, *args, **kwargs)
+#
+#             # 用户不是管理员
+#             self.write('No Permissions!')
+#             return
+#
+#         # # 用户没有登录,且请求为 GET, HEAD
+#         # if self.request.method in ("GET", "HEAD"):
+#         #     url = self.get_login_url()
+#         #     if "?" not in url:
+#         #         if urlparse.urlsplit(url).scheme:
+#         #             # if login url is absolute, make next absolute too
+#         #             next_url = self.request.full_url()
+#         #         else:
+#         #             next_url = self.request.uri
+#         #         url += "?" + urlencode(dict(next=next_url))
+#         #     self.redirect(url)
+#         #     return
+#         #
+#         # # 出错
+#         # raise tornado.web.HTTPError(403)
+#
+#         return wrapper

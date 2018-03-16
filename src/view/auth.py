@@ -4,17 +4,17 @@ from tornado.web import authenticated
 
 from handler import BaseHandler
 from model.auth import User
-from form.auth import RegisterForm, LoginForm, UserinfoEditForm
+from form.auth import RegisterForm, LoginForm, ProfileEditForm
 from utils.enc import encrypt_password
 
 
 class RegisterHandler(BaseHandler):
 
     def get(self):
-        self.render('register.html')
+        self.render('auth/register.html')
 
     def post(self):
-        print("-->", self.request.arguments)
+        # print("-->", self.request.arguments)
         form = RegisterForm(self)
         if form.validate():
             user = User(username=form.username.data, email=form.email.data)
@@ -24,24 +24,27 @@ class RegisterHandler(BaseHandler):
             self.db.commit()
             self.redirect('/login')
         else:
-            self.render('register.html', message=form)
+            self.render('auht/register.html', message=form)
 
 
 class LoginHandler(BaseHandler):
 
     def get(self):
-        self.render('login.html')
+        self.render('auth/login.html')
 
     def post(self):
         form = LoginForm(self)
         if form.validate():
             user = self.db.query(User).filter_by(email=form.email.data).first()
+            if user.is_lock:
+                err = '无权登陆!'
+                self.render('404.html', message=err)
             if not user:
                 err = '用户名密码错误!'
-                self.render('login.html', error=err)
+                self.render('auth/login.html', error=err)
             if not user.validate_password(form.password.data):
                 err = '用户名密码错误!'
-                self.render('login.html', error=err)
+                self.render('auth/login.html', error=err)
             self.set_secure_cookie("blog_user", str(user.id))
         self.redirect('/')
 
@@ -53,28 +56,28 @@ class LogoutHandler(BaseHandler):
         self.redirect('/')
 
 
-class UserinfoHandler(BaseHandler):
+class ProfileHandler(BaseHandler):
 
     @authenticated
     def get(self):
         # user = self.db.query(User).filter_by(id=ID).first()
-        self.render("userinfo.html")
+        self.render("auth/profile.html")
 
 
-class UserinfoEditHandler(BaseHandler):
+class ProfileEditHandler(BaseHandler):
 
     @authenticated
     def get(self):
-        form = UserinfoEditForm(self)
+        form = ProfileEditForm(self)
         form.username.data = self.current_user.username
         form.email.data = self.current_user.email
         form.nickname.data = self.current_user.nickname
 
-        self.render("userinfo_edit.html", form=form)
+        self.render("auth/profile_edit.html", form=form)
 
     @authenticated
     def post(self):
-        form = UserinfoEditForm(self)
+        form = ProfileEditForm(self)
         err = {}
         if form.validate():
             user = self.db.query(User).filter_by(
@@ -99,16 +102,16 @@ class UserinfoEditHandler(BaseHandler):
             if form.nickname.data:
                 user.nickname = form.nickname.data
             self.db.commit()
-            self.render("userinfo.html", form=form)
+            self.render("auth/profile.html", form=form)
         else:
-            self.render("userinfo_edit.html", form=form, message=form.errors)
+            self.render("auth/profile_edit.html", form=form, message=form.errors)
 
 
 class UploadHandler(BaseHandler):
 
     @authenticated
     def get(self):
-        self.render("upload.html")
+        self.render("auth/upload.html")
 
     @authenticated
     def post(self):
@@ -126,7 +129,7 @@ class UploadHandler(BaseHandler):
         user = self.db.query(User).filter_by(id=self.current_user.id).first()
         user.img = final_filename
         self.db.commit()
-        self.redirect('/userinfo')
+        self.redirect('/profile')
         # self.finish("file" + final_filename + " is uploaded")
         # output_file = open("static/uploads/" + original_fname, 'wb')
         # output_file.write(file1['body'])

@@ -44,3 +44,19 @@
 //       contentType: false
 //   });
 // });
+
+
+$(document).ready(function(){
+  // $('#userinfo_d').click(function(){
+    if($('#is_admin').val() == "True"){
+      $('#is_admin').prop('checked', 'checked');
+    }else{
+      $('#is_admin').removeProp('checked');
+    }
+    if($('#is_lock').val() == "True"){
+      $('#is_lock').prop('checked', 'checked');
+    }else{
+      $('#is_lock').removeProp('checked');
+    }
+  // });
+});
