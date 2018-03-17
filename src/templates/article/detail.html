@@ -26,5 +26,8 @@ ${ article.content }
 </div>
 <hr>
 
+<a href="${reverse_url('article:edit', article.id)}">编辑</a>
+<a href="${reverse_url('article:del', article.id)}">删除</a>
+
 
 </%block>

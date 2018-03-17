@@ -1,53 +1,42 @@
 from tornado.web import authenticated
 
-from handler import BaseHandler
+from handler import BaseHandler, administrator
 from model.auth import User
 from form.admin import UserinfoEditForm
 
 
 class UserlistHandler(BaseHandler):
 
-    @authenticated
+    @administrator
     def get(self):
-        if self.current_user.is_admin:
-            users = self.db.query(User).order_by(User.id).all()
-            self.render("admin/userlist.html", users=users)
-        else:
-            self.render("404.html", message="无此权限！")
+        users = self.db.query(User).order_by(User.id).all()
+        self.render("admin/userlist.html", users=users)
 
 
 class UserinfoHandler(BaseHandler):
 
-    @authenticated
+    @administrator
     def get(self, ID):
-        if self.current_user.is_admin:
-            user = self.db.query(User).filter_by(id=ID).first()
-            self.render("admin/userinfo.html", user=user)
-        else:
-            self.render("404.html", message="无此权限！")
+        user = self.db.query(User).filter_by(id=ID).first()
+        self.render("admin/userinfo.html", user=user)
 
 
 class UserinfoEditHandler(BaseHandler):
 
-    @authenticated
+    @administrator
     def get(self, ID):
-        if self.current_user.is_admin:
-            user = self.db.query(User).filter_by(id=ID).first()
-            form = UserinfoEditForm(self)
-            form.username.data = user.username
-            form.email.data = user.email
-            form.nickname.data = user.nickname
-            form.is_admin.data = user.is_admin
-            form.is_lock.data = user.is_lock
+        user = self.db.query(User).filter_by(id=ID).first()
+        form = UserinfoEditForm(self)
+        form.username.data = user.username
+        form.email.data = user.email
+        form.nickname.data = user.nickname
+        form.is_admin.data = user.is_admin
+        form.is_lock.data = user.is_lock
 
-            self.render("admin/userinfo_edit.html", form=form, user=user)
-        else:
-            self.render("404.html", message="无此权限！")
+        self.render("admin/userinfo_edit.html", form=form, user=user)
 
-    @authenticated
+    @administrator
     def post(self, ID):
-        if not self.current_user.is_admin:
-            self.render("404.html", message="无此权限！")
         form = UserinfoEditForm(self)
         err = {}
         user = self.db.query(User).filter_by(id=ID).first()

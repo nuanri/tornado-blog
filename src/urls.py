@@ -23,7 +23,7 @@ handlers = [
     # 文章
     url(r"/article/create", article.CreateHandler, name="article:create"),
     url(r"/article/([0-9]+)", article.DetailHandler, name="article:detail"),
-    url(r"/article/([0-9]+)edit", article.EditHandler, name="article:edit"),
-    url(r"/article/del", article.DeleteHandler, name="article:del"),
+    url(r"/article/([0-9]+)/edit", article.EditHandler, name="article:edit"),
+    url(r"/article/del/([0-9]+)", article.DeleteHandler, name="article:del"),
 
 ]

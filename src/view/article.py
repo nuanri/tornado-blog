@@ -1,6 +1,6 @@
 from sqlalchemy import desc
 
-from handler import BaseHandler
+from handler import BaseHandler, administrator
 from model.article import Article
 from form.article import ArticleForm
 
@@ -14,9 +14,11 @@ class IndexHandler(BaseHandler):
 
 class CreateHandler(BaseHandler):
 
+    @administrator
     def get(self):
         self.render('article/create.html')
 
+    @administrator
     def post(self):
         form = ArticleForm(self)
         if form.validate():
@@ -24,30 +26,55 @@ class CreateHandler(BaseHandler):
             self.db.add(article)
             self.db.commit()
             self.redirect('/')
-            # self.render("article/detail.html", article=article)
+        else:
+            self.render("article/create.html", message=form.errors)
 
 
 class DetailHandler(BaseHandler):
 
     def get(self, ID):
 
-        article = self.db.query(Article).filter_by(id=ID).one()
-
+        article = self.db.query(Article).filter_by(id=ID).first()
+        if not article:
+            self.render('404.html', message="无此文章！")
         self.render("article/detail.html", article=article)
-
-    def post(self, ID):
-        form = ArticleForm(self)
-
-        article = self.db.query(Article).filter_by(id=ID).one()
-        form.title.data = article.title
-        form.content.data = article.content
 
 
 class EditHandler(BaseHandler):
-    def get(self):
-        pass
+
+    @administrator
+    def get(self, ID):
+        form = ArticleForm(self)
+
+        article = self.db.query(Article).filter_by(id=ID).first()
+        if not article:
+            self.render('404.html', message="无此文章！")
+        form.title.data = article.title
+        form.content.data = article.content
+
+        self.render("article/edit.html", form=form)
+
+    @administrator
+    def post(self, ID):
+        form = ArticleForm(self)
+        if form.validate():
+            article = self.db.query(Article).filter_by(id=ID).one()
+            article.title = form.title.data
+            article.content = form.content.data
+            self.db.commit()
+            self.render("article/detail.html", article=article)
+        else:
+            self.render("article/edit.html", form=form, message=form.errors)
 
 
 class DeleteHandler(BaseHandler):
-    def get(self):
-        pass
+
+    @administrator
+    def get(self, ID):
+
+        article = self.db.query(Article).filter_by(id=ID).first()
+        if not article:
+            self.render('404.html', message="无此文章！")
+        self.db.delete(article)
+        self.db.commit()
+        self.redirect('/')
