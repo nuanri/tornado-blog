@@ -17,5 +17,13 @@ handlers = [
     url(r"/userinfo/([0-9]+)", admin.UserinfoHandler, name="admin:userinfo"),
     url(r"/userinfo/([0-9]+)/edit", admin.UserinfoEditHandler, name="admin:userinfo:edit"),
 
+    # 首页
     url(r"/", article.IndexHandler, name="article:index"),
+
+    # 文章
+    url(r"/article/create", article.CreateHandler, name="article:create"),
+    url(r"/article/([0-9]+)", article.DetailHandler, name="article:detail"),
+    url(r"/article/([0-9]+)edit", article.EditHandler, name="article:edit"),
+    url(r"/article/del", article.DeleteHandler, name="article:del"),
+
 ]

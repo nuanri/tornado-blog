@@ -1,0 +1,18 @@
+<%inherit file="../base.html"/>
+
+<%block name="content">
+
+<form method="POST">${ xsrf_form_html() }
+  <div class="form-group">
+    <label for="title">标题</label>
+    <textarea name="title" class="form-control"  rows="3" id="title" placeholder="Title"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="content">正文</label>
+    <textarea name="content" class="form-control" rows="30" cols="10" id="content" placeholder="Content"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+
+</%block>

@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey,\
-    DateTime, Table, Sequence, Boolean
+from sqlalchemy import Column, Integer, String,\
+    DateTime, Sequence, Boolean
 from database import ORMBase
 from utils.enc import check_password
 
@@ -12,7 +12,7 @@ class User(ORMBase):
     username = Column(String(30), unique=True)
     nickname = Column(String(30))
     email = Column(String(64), unique=True)
-    img = Column(String(1024))
+    img = Column(String(1024))    # 头像 url
     password = Column(String(512))
     is_admin = Column(Boolean, default=False)
     is_lock = Column(Boolean, default=False)

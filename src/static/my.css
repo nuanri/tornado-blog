@@ -1,0 +1,7 @@
+textarea[name=title] {
+    resize: none;
+}
+
+textarea[name=content] {
+    resize: none;
+}

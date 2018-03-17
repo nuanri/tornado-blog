@@ -40,8 +40,6 @@ class UserinfoEditHandler(BaseHandler):
             form.is_admin.data = user.is_admin
             form.is_lock.data = user.is_lock
 
-            print("is_admin ==>", form.is_admin.data )
-            print("is_lock ==>", form.is_lock.data )
             self.render("admin/userinfo_edit.html", form=form, user=user)
         else:
             self.render("404.html", message="无此权限！")
