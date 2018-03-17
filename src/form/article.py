@@ -1,4 +1,4 @@
-from wtforms import BooleanField,validators, TextField
+from wtforms import BooleanField, validators, TextField
 from wtforms.validators import DataRequired
 
 from custon_form import Form

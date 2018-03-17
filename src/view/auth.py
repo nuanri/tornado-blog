@@ -17,6 +17,20 @@ class RegisterHandler(BaseHandler):
         # print("-->", self.request.arguments)
         form = RegisterForm(self)
         if form.validate():
+            err = {}
+            u_username = self.db.query(User).filter(
+                User.username == form.username.data
+            ).first()
+            if u_username:
+                err["username"] = ["用户名{}已被占用".format(u_username.username)]
+            u_email = self.db.query(User).filter(
+                User.email == form.email.data
+            ).first()
+            if u_email:
+                err["emial"] = ["邮箱{}已被占用".format(u_email.email)]
+            if len(err) != 0:
+                self.render("auth/register.html", form=form, message=err)
+
             user = User(username=form.username.data, email=form.email.data)
             user.password = encrypt_password(form.password.data)
             user.img = 'default.jpg'
@@ -24,7 +38,7 @@ class RegisterHandler(BaseHandler):
             self.db.commit()
             self.redirect('/login')
         else:
-            self.render('auht/register.html', message=form)
+            self.render('auth/register.html', message=form.errors)
 
 
 class LoginHandler(BaseHandler):

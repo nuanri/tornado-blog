@@ -1,4 +1,4 @@
-from wtforms import BooleanField, StringField, PasswordField, validators, TextField
+from wtforms import StringField, PasswordField, validators, TextField
 
 from custon_form import Form
 

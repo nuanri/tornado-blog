@@ -8,9 +8,8 @@
 
     <div class="col-md-6">
       % if message:
-        % for field, errors in message.errors.items():
+        % for field, errors in message.items():
         <div style="color:red">${field}: ${','.join(errors)}</div>
-        <!-- <div>${message[field].label}</div> -->
         % endfor
       % endif
       <form method="POST">${ xsrf_form_html() }

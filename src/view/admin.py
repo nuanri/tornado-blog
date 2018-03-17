@@ -1,4 +1,4 @@
-from tornado.web import authenticated
+# from tornado.web import authenticated
 
 from handler import BaseHandler, administrator
 from model.auth import User
@@ -18,6 +18,8 @@ class UserinfoHandler(BaseHandler):
     @administrator
     def get(self, ID):
         user = self.db.query(User).filter_by(id=ID).first()
+        if not user:
+            self.render('404.html', message="无此用户！")
         self.render("admin/userinfo.html", user=user)
 
 
@@ -26,6 +28,8 @@ class UserinfoEditHandler(BaseHandler):
     @administrator
     def get(self, ID):
         user = self.db.query(User).filter_by(id=ID).first()
+        if not user:
+            self.render('404.html', message="无此用户！")
         form = UserinfoEditForm(self)
         form.username.data = user.username
         form.email.data = user.email
@@ -40,6 +44,8 @@ class UserinfoEditHandler(BaseHandler):
         form = UserinfoEditForm(self)
         err = {}
         user = self.db.query(User).filter_by(id=ID).first()
+        if not user:
+            self.render('404.html', message="无此用户！")
         if form.validate():
             u_username = self.db.query(User).filter(
                 User.id != ID,
@@ -59,11 +65,14 @@ class UserinfoEditHandler(BaseHandler):
             user.email = form.email.data
             if form.nickname.data:
                 user.nickname = form.nickname.data
-            # print("form.is_admin.data ==>", form.is_admin.data)
-            # print("form.is_lock.data ==>", form.is_lock.data)
             user.is_admin = form.is_admin.data
             user.is_lock = form.is_lock.data
             self.db.commit()
             self.render("admin/userinfo.html", form=form, user=user)
         else:
-            self.render("admin/userinfo_edit.html", form=form, message=form.errors, user=user)
+            self.render(
+                "admin/userinfo_edit.html",
+                form=form,
+                message=form.errors,
+                user=user
+            )
