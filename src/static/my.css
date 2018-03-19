@@ -5,3 +5,8 @@ textarea[name=title] {
 textarea[name=content] {
     resize: none;
 }
+
+#content{
+  padding: 25px 0px;
+
+}

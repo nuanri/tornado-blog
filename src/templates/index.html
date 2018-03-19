@@ -2,9 +2,6 @@
 
 <%block name="content">
 
-<a href="${reverse_url('article:create')}">增加文章</a>
-
-
 <div>
 % for a in articles:
       <!-- Blog Post -->
@@ -15,10 +12,10 @@
           ${ a.abstract}
 
 
-          <a href="${reverse_url('article:detail', a.id)}">查看</a>
+          <a href="${reverse_url('article:detail', a.id)}">......</a>
         <div class="card-footer text-muted">
           Posted on January 1, 2017 by
-          <a href="#">Start Bootstrap</a>
+          <a href="#">${a.user.username}</a>
         </div>
       </div>
     </div>
