@@ -1,6 +1,7 @@
-tornado
-markdown
-sqlalchemy
-psycopg2-binary
-Mako
-wtforms
+tornado==5.0
+markdown==2.6.11
+pygments==2.2.0
+sqlalchemy==1.2.5
+psycopg2-binary==2.7.4
+Mako==1.0.7
+wtforms==2.1

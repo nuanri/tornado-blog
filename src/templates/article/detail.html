@@ -21,12 +21,14 @@
 
 <!-- Post Content -->
 <div>
-${ article.content }
+${ article.content_html }
 
 </div>
 <hr>
 
-<a href="${reverse_url('article:edit', article.id)}">编辑</a>
+% if article.user == current_user:
+  <a href="${reverse_url('article:edit', article.id)}">编辑</a>
+% endif
 <a href="${reverse_url('article:del', article.id)}">删除</a>
 
 

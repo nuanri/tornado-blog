@@ -22,7 +22,11 @@ class CreateHandler(BaseHandler):
     def post(self):
         form = ArticleForm(self)
         if form.validate():
-            article = Article(title=form.title.data, content=form.content.data)
+            article = Article(
+                user=self.current_user,
+                title=form.title.data,
+                content=form.content.data
+            )
             self.db.add(article)
             self.db.commit()
             self.redirect('/')
@@ -46,6 +50,9 @@ class EditHandler(BaseHandler):
     def get(self, ID):
         form = ArticleForm(self)
 
+        article = self.db.query(Article).get(ID)
+        if article.user != self.current_user:
+            self.render('404.html', message="无此权限！")
         article = self.db.query(Article).filter_by(id=ID).first()
         if not article:
             self.render('404.html', message="无此文章！")
