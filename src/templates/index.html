@@ -14,8 +14,8 @@
 
           <a href="${reverse_url('article:detail', a.id)}">......</a>
         <div class="card-footer text-muted">
-          Posted on January 1, 2017 by
-          <a href="#">${a.user.username}</a>
+          <span>写于 ${ftime(a.created)}</span>
+          <!-- <a href="#">${a.user.username}</a> -->
         </div>
       </div>
     </div>

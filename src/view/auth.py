@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from tornado.web import authenticated
 
@@ -6,6 +7,7 @@ from handler import BaseHandler
 from model.auth import User
 from form.auth import RegisterForm, LoginForm, ProfileEditForm
 from utils.enc import encrypt_password
+from utils.time_ import ftime
 
 
 class RegisterHandler(BaseHandler):
@@ -34,11 +36,12 @@ class RegisterHandler(BaseHandler):
             user = User(username=form.username.data, email=form.email.data)
             user.password = encrypt_password(form.password.data)
             user.img = 'default.jpg'
+            user.date_joined = datetime.datetime.now()
             self.db.add(user)
             self.db.commit()
             self.redirect('/login')
         else:
-            self.render('auth/register.html', message=form.errors)
+            self.render('auth/register.html', ftime=ftime, message=form.errors)
 
 
 class LoginHandler(BaseHandler):
@@ -60,6 +63,8 @@ class LoginHandler(BaseHandler):
                 err = '用户名密码错误!'
                 self.render('auth/login.html', error=err)
             self.set_secure_cookie("blog_user", str(user.id))
+            user.last_login = datetime.datetime.now()
+            self.db.commit()
         self.redirect('/')
 
 
@@ -75,7 +80,7 @@ class ProfileHandler(BaseHandler):
     @authenticated
     def get(self):
         # user = self.db.query(User).filter_by(id=ID).first()
-        self.render("auth/profile.html")
+        self.render("auth/profile.html", ftime=ftime)
 
 
 class ProfileEditHandler(BaseHandler):
@@ -87,7 +92,7 @@ class ProfileEditHandler(BaseHandler):
         form.email.data = self.current_user.email
         form.nickname.data = self.current_user.nickname
 
-        self.render("auth/profile_edit.html", form=form)
+        self.render("auth/profile_edit.html", ftime=ftime, form=form)
 
     @authenticated
     def post(self):
@@ -116,7 +121,7 @@ class ProfileEditHandler(BaseHandler):
             if form.nickname.data:
                 user.nickname = form.nickname.data
             self.db.commit()
-            self.render("auth/profile.html", form=form)
+            self.render("auth/profile.html", ftime=ftime, form=form)
         else:
             self.render("auth/profile_edit.html", form=form, message=form.errors)
 

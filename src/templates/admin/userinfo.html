@@ -19,8 +19,8 @@
         <tr><td>邮箱</td><td>${ user.email }</td></tr>
         <tr><td>别名</td><td>${ user.nickname }</td></tr>
         <tr><td>是否锁定</td><td>${ user.is_lock }</td></tr>
-        <tr><td>加入时间</td><td>${ user.date_joined }</td></tr>
-        <tr><td>登陆时间</td><td>${ user.last_login }</td></tr>
+        <tr><td>加入时间</td><td>${ ftime(user.date_joined) }</td></tr>
+        <tr><td>登陆时间</td><td>${ ftime(user.last_login) }</td></tr>
       </table>
       <a href="${ reverse_url('admin:userinfo:edit', user.id)}" class="btn btn-primary">编辑</a>
     </div>

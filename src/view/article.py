@@ -1,15 +1,17 @@
+import datetime
 from sqlalchemy import desc
 
+from form.article import ArticleForm
 from handler import BaseHandler, administrator
 from model.article import Article
-from form.article import ArticleForm
+from utils.time_ import ftime
 
 
 class IndexHandler(BaseHandler):
 
     def get(self):
         articles = self.db.query(Article).order_by(desc(Article.id)).all()
-        self.render('index.html', articles=articles)
+        self.render('index.html', ftime=ftime, articles=articles)
 
 
 class CreateHandler(BaseHandler):
@@ -41,7 +43,7 @@ class DetailHandler(BaseHandler):
         article = self.db.query(Article).filter_by(id=ID).first()
         if not article:
             self.render('404.html', message="无此文章！")
-        self.render("article/detail.html", article=article)
+        self.render("article/detail.html", ftime=ftime, article=article)
 
 
 class EditHandler(BaseHandler):
@@ -68,8 +70,9 @@ class EditHandler(BaseHandler):
             article = self.db.query(Article).filter_by(id=ID).one()
             article.title = form.title.data
             article.content = form.content.data
+            article.updated = datetime.datetime.now()
             self.db.commit()
-            self.render("article/detail.html", article=article)
+            self.render("article/detail.html", ftime=ftime, article=article)
         else:
             self.render("article/edit.html", form=form, message=form.errors)
 

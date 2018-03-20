@@ -1,8 +1,8 @@
 # from tornado.web import authenticated
-
 from handler import BaseHandler, administrator
 from model.auth import User
 from form.admin import UserinfoEditForm
+from utils.time_ import ftime
 
 
 class UserlistHandler(BaseHandler):
@@ -20,7 +20,7 @@ class UserinfoHandler(BaseHandler):
         user = self.db.query(User).filter_by(id=ID).first()
         if not user:
             self.render('404.html', message="无此用户！")
-        self.render("admin/userinfo.html", user=user)
+        self.render("admin/userinfo.html", ftime=ftime, user=user)
 
 
 class UserinfoEditHandler(BaseHandler):
@@ -37,7 +37,7 @@ class UserinfoEditHandler(BaseHandler):
         form.is_admin.data = user.is_admin
         form.is_lock.data = user.is_lock
 
-        self.render("admin/userinfo_edit.html", form=form, user=user)
+        self.render("admin/userinfo_edit.html", ftime=ftime, form=form, user=user)
 
     @administrator
     def post(self, ID):
@@ -68,7 +68,7 @@ class UserinfoEditHandler(BaseHandler):
             user.is_admin = form.is_admin.data
             user.is_lock = form.is_lock.data
             self.db.commit()
-            self.render("admin/userinfo.html", form=form, user=user)
+            self.render("admin/userinfo.html", ftime=ftime, form=form, user=user)
         else:
             self.render(
                 "admin/userinfo_edit.html",

@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy import Column, Integer, String,\
     DateTime, Sequence, Boolean
 from database import ORMBase
@@ -16,8 +17,8 @@ class User(ORMBase):
     password = Column(String(512))
     is_admin = Column(Boolean, default=False)
     is_lock = Column(Boolean, default=False)
-    date_joined = Column(DateTime())
-    last_login = Column(DateTime())
+    date_joined = Column(DateTime, default=datetime.datetime.now)
+    last_login = Column(DateTime, default=datetime.datetime.now)
 
     def __init__(self, username, email):
         self.username = username

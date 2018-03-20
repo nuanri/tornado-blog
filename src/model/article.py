@@ -1,4 +1,5 @@
 import re
+import datetime
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey,\
     DateTime, Sequence, Boolean
@@ -18,8 +19,8 @@ class Article(ORMBase):
     user_id = Column(Integer, ForeignKey('auth_user.id'))
     user = relationship("User", backref="aticles")
     content = Column(Text())
-    created = Column(DateTime())
-    updated = Column(DateTime())
+    created = Column(DateTime, default=datetime.datetime.now)
+    updated = Column(DateTime, default=datetime.datetime.now)
     public = Column(Boolean, default=False)
     view_count = Column(Integer)
 
