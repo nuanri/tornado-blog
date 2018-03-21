@@ -7,6 +7,25 @@ textarea[name=content] {
 }
 
 #content{
-  padding: 25px 0px;
+    padding: 25px 0px;
 
+}
+
+.dropdown-menu {
+   right: 0;
+   left: auto;
+   margin-top: 32px;
+}
+
+#content, .dropdown {
+    color: #777;
+}
+
+a:hover {
+    color: #48cfad;
+    text-decoration: none;
+}
+
+a {
+    color: #777;
 }
