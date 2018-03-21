@@ -11,11 +11,11 @@ textarea[name=content] {
 
 }
 
-.dropdown-menu {
+/* .dropdown-menu {
    right: 0;
    left: auto;
    margin-top: 32px;
-}
+} */
 
 #content, .dropdown {
     color: #777;
