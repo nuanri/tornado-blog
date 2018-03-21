@@ -21,8 +21,8 @@ class Article(ORMBase):
     content = Column(Text())
     created = Column(DateTime, default=datetime.datetime.now)
     updated = Column(DateTime, default=datetime.datetime.now)
-    public = Column(Boolean, default=False)
-    view_count = Column(Integer)
+    is_public = Column(Boolean, default=True)
+    view_count = Column(Integer, default=0)
 
     def __init__(self, user, title, content):
         self.user_id = user.id

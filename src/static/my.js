@@ -48,6 +48,9 @@
 
 $(document).ready(function(){
   // $('#userinfo_d').click(function(){
+    // user
+    console.log("==>", $('#is_admin').val())
+
     if($('#is_admin').val() == "True"){
       $('#is_admin').prop('checked', 'checked');
     }else{
@@ -57,6 +60,13 @@ $(document).ready(function(){
       $('#is_lock').prop('checked', 'checked');
     }else{
       $('#is_lock').removeProp('checked');
+    }
+    // article
+    // console.log("==>", $('#is_public').val())
+    if($('#is_public').val() == "True"){
+      $('#is_public').prop('checked', 'checked');
+    }else{
+      $('#is_public').removeProp('checked');
     }
   // });
 });

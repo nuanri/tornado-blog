@@ -1,6 +1,9 @@
 # from tornado.web import authenticated
+from sqlalchemy import desc
+
 from handler import BaseHandler, administrator
 from model.auth import User
+from model.article import Article
 from form.admin import UserinfoEditForm
 from utils.time_ import ftime
 
@@ -76,3 +79,11 @@ class UserinfoEditHandler(BaseHandler):
                 message=form.errors,
                 user=user
             )
+
+
+class ArticlelistHandler(BaseHandler):
+
+    @administrator
+    def get(self):
+        articles = self.db.query(Article).order_by(desc(Article.id)).all()
+        self.render("admin/article_list.html", ftime=ftime, articles=articles)

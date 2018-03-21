@@ -29,6 +29,7 @@ class CreateHandler(BaseHandler):
                 title=form.title.data,
                 content=form.content.data
             )
+            article.is_public = form.is_public.data
             self.db.add(article)
             self.db.commit()
             self.redirect('/')
@@ -60,6 +61,7 @@ class EditHandler(BaseHandler):
             self.render('404.html', message="无此文章！")
         form.title.data = article.title
         form.content.data = article.content
+        form.is_public.data = article.is_public
 
         self.render("article/edit.html", form=form)
 
@@ -70,6 +72,7 @@ class EditHandler(BaseHandler):
             article = self.db.query(Article).filter_by(id=ID).one()
             article.title = form.title.data
             article.content = form.content.data
+            article.is_public = form.is_public.data
             article.updated = datetime.datetime.now()
             self.db.commit()
             self.render("article/detail.html", ftime=ftime, article=article)

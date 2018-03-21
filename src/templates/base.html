@@ -40,6 +40,7 @@
                   <li style="padding:5px 0px"><a href="${ reverse_url('auth:profile') }">账户信息</a></li>
                   % if current_user.is_admin:
                     <li style="padding:5px 0px"><a href="${ reverse_url('admin:userlist') }">用户列表</a></li>
+                    <li style="padding:5px 0px"><a href="${ reverse_url('admin:articlelist') }">文章列表</a></li>
                   % endif
                   <!-- <li role="separator" class="divider"></li> -->
                   <hr/>

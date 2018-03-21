@@ -4,6 +4,7 @@
 
 <div>
 % for a in articles:
+    % if a.is_public:
       <!-- Blog Post -->
       <div class="card mb-4">
         <!-- <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> -->
@@ -17,8 +18,9 @@
           <span>写于 ${ftime(a.created)}</span>
           <!-- <a href="#">${a.user.username}</a> -->
         </div>
+        </div>
       </div>
-    </div>
+    % endif
 % endfor
 
       <!-- Pagination -->
