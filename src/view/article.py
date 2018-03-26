@@ -5,13 +5,22 @@ from form.article import ArticleForm
 from handler import BaseHandler, administrator
 from model.article import Article
 from utils.time_ import ftime
+from utils.pagination import get_info, custom_rule
 
 
 class IndexHandler(BaseHandler):
 
     def get(self):
-        articles = self.db.query(Article).order_by(desc(Article.id)).all()
-        self.render('index.html', ftime=ftime, articles=articles)
+
+        cur_page, page_size, start, stop = get_info(self)
+
+        a = self.db.query(Article).filter_by(is_public=True).order_by(desc(Article.id))
+        total = a.count()
+        articles = a.slice(start, stop)
+
+        d = custom_rule(cur_page, total, page_size)
+
+        self.render('index.html', ftime=ftime, articles=articles, d=d)
 
 
 class CreateHandler(BaseHandler):

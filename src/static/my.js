@@ -49,8 +49,6 @@
 $(document).ready(function(){
   // $('#userinfo_d').click(function(){
     // user
-    console.log("==>", $('#is_admin').val())
-
     if($('#is_admin').val() == "True"){
       $('#is_admin').prop('checked', 'checked');
     }else{

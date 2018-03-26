@@ -29,3 +29,15 @@ a:hover {
 a {
     color: #777;
 }
+
+/* 分页 */
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #48cfad;
+    border-color: #48cfad;
+}
+
+.page-item .page-link {
+    color: #777;
+}

@@ -6,14 +6,23 @@ from model.auth import User
 from model.article import Article
 from form.admin import UserinfoEditForm
 from utils.time_ import ftime
+from utils.pagination import get_info, custom_rule
 
 
 class UserlistHandler(BaseHandler):
 
     @administrator
     def get(self):
-        users = self.db.query(User).order_by(User.id).all()
-        self.render("admin/userlist.html", users=users)
+
+        cur_page, page_size, start, stop = get_info(self)
+
+        a = self.db.query(User).order_by(User.id)
+        total = a.count()
+        users = a.slice(start, stop)
+
+        d = custom_rule(cur_page, total, page_size)
+
+        self.render("admin/userlist.html", users=users, d=d)
 
 
 class UserinfoHandler(BaseHandler):
@@ -85,5 +94,13 @@ class ArticlelistHandler(BaseHandler):
 
     @administrator
     def get(self):
-        articles = self.db.query(Article).order_by(desc(Article.id)).all()
-        self.render("admin/article_list.html", ftime=ftime, articles=articles)
+
+        cur_page, page_size, start, stop = get_info(self)
+
+        a = self.db.query(Article).order_by(desc(Article.id))
+        total = a.count()
+        articles = a.slice(start, stop)
+
+        d = custom_rule(cur_page, total, page_size)
+
+        self.render("admin/article_list.html", ftime=ftime, articles=articles, d=d)
