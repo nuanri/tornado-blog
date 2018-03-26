@@ -7,7 +7,7 @@ textarea[name=content] {
 }
 
 #content{
-    padding: 25px 0px;
+    padding: 25px 0px 100px 0px;
 
 }
 
@@ -41,3 +41,14 @@ a {
 .page-item .page-link {
     color: #777;
 }
+
+/* 导航 */
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #48cfad;
+}
+
+/* .text-white {
+    color: #777!important;
+} */

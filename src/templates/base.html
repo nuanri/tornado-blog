@@ -90,9 +90,11 @@
     <!-- /.container -->
 
     <!-- Footer -->
+    <!-- <footer class="py-5 bg-dark"> -->
     <footer class="py-5 bg-dark">
       <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+        <!-- <p class="m-0 text-center">Copyright &copy; Your Website 2018</p> -->
       </div>
       <!-- /.container -->
     </footer>
@@ -105,3 +107,14 @@
   </body>
 
 </html>
+
+<script>
+var url = window.location;
+// Will only work if string in href matches with location
+// $('.list-group a[href="'+ url +'"]').parent().addClass('active');
+
+// Will also work for relative and absolute hrefs
+$('.dropdown-item').filter(function() {
+    return this.href == url;
+}).addClass('active');
+</script>
