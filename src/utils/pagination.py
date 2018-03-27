@@ -18,7 +18,7 @@ def get_info(handler):
         return (cur_page, page_size, start, stop)
 
 
-def custom_rule(cur_page, total, page_size):
+def custom_rule(cur_page, total, page_size, path_url):
     '''分页样式，当前页码，前五页，后五页模式
     '''
     # 获取的最大页码数
@@ -58,11 +58,45 @@ def custom_rule(cur_page, total, page_size):
     else:
         has_next = 0
 
+    def page_url(cur_page):
+        return custom_url(path_url, cur_page)
+
     d = {
         "plist": plist,
         "has_pre": has_pre,
         "has_next": has_next,
-        "cur_page": cur_page
+        "cur_page": cur_page,
+        "page_url": page_url
     }
 
     return d
+
+
+def custom_url(path_url, cur_page):
+    '''定制页码的url
+    '''
+
+    from urllib.parse import urlparse, urlsplit, parse_qsl, urlencode
+
+    if '?' not in path_url:
+        page_url = path_url + '?page=' + str(cur_page)
+        return page_url
+
+    # /?keyword=向日葵&page=2
+    new = []
+    find_page = False
+    path = urlsplit(path_url).path
+    query = urlsplit(path_url).query
+    params = parse_qsl(query)
+    for k, v in params:
+        if k == 'page':
+            v = cur_page
+            find_page = True
+        new.append([k, v])
+
+    # /?keyword=向日葵
+    if not find_page:
+        new.append(["page", cur_page])
+
+    page_url = '?'.join([path, urlencode(dict(new))])
+    return page_url

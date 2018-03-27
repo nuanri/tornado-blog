@@ -11,7 +11,8 @@ DB_URI = '{engine}://{username}:{password}@{host}/{database}'.format(**DB)
 
 def get_db_session():
 
-    engine = create_engine(DB_URI, echo=True)
+    # engine = create_engine(DB_URI, echo=True)
+    engine = create_engine(DB_URI, echo=False)
     session_factory = sessionmaker(bind=engine)
     session = scoped_session(session_factory)
     return session

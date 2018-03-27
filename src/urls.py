@@ -28,4 +28,7 @@ handlers = [
     url(r"/article/([0-9]+)/edit", article.EditHandler, name="article:edit"),
     url(r"/article/del/([0-9]+)", article.DeleteHandler, name="article:del"),
 
+    # 搜索
+    # url(r"/article/search", article.SearchHandler, name="article:search"),
+
 ]

@@ -22,12 +22,12 @@ textarea[name=content] {
 }
 
 a:hover {
-    color: #48cfad;
+    color: #777;
     text-decoration: none;
 }
 
 a {
-    color: #777;
+    color: #48cfad;
 }
 
 /* 分页 */
@@ -51,4 +51,11 @@ a {
 
 /* .text-white {
     color: #777!important;
+} */
+
+/* #search-form {
+    z-index: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
 } */

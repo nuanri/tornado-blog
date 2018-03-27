@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 from form.article import ArticleForm
 from handler import BaseHandler, administrator
@@ -11,15 +11,25 @@ from utils.pagination import get_info, custom_rule
 class IndexHandler(BaseHandler):
 
     def get(self):
+        sub_string = self.get_argument("keyword", default=None)
+        if sub_string is None:
+            a = self.db.query(Article).filter_by(
+                is_public=True
+            ).order_by(desc(Article.id))
+        else:
+            a = self.db.query(Article).filter(
+                or_(
+                    # ilike 可以忽略大小写查询
+                    Article.title.ilike('%{}%'.format(sub_string)),
+                    Article.content.ilike('%{}%'.format(sub_string)))
+                ).order_by(desc(Article.id))
 
         cur_page, page_size, start, stop = get_info(self)
-
-        a = self.db.query(Article).filter_by(is_public=True).order_by(desc(Article.id))
         total = a.count()
         articles = a.slice(start, stop)
 
-        d = custom_rule(cur_page, total, page_size)
-
+        path_url = self.request.uri
+        d = custom_rule(cur_page, total, page_size, path_url)
         self.render('index.html', ftime=ftime, articles=articles, d=d)
 
 

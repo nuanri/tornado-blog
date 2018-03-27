@@ -20,7 +20,8 @@ class UserlistHandler(BaseHandler):
         total = a.count()
         users = a.slice(start, stop)
 
-        d = custom_rule(cur_page, total, page_size)
+        path_url = self.request.uri
+        d = custom_rule(cur_page, total, page_size, path_url=path_url)
 
         self.render("admin/userlist.html", users=users, d=d)
 
@@ -101,6 +102,7 @@ class ArticlelistHandler(BaseHandler):
         total = a.count()
         articles = a.slice(start, stop)
 
-        d = custom_rule(cur_page, total, page_size)
+        path_url = self.request.uri
+        d = custom_rule(cur_page, total, page_size, path_url)
 
         self.render("admin/article_list.html", ftime=ftime, articles=articles, d=d)
