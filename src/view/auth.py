@@ -1,22 +1,62 @@
 import os
 import datetime
+import random
+from validate_email import validate_email
 
 from tornado.web import authenticated
 
 from handler import BaseHandler
-from model.auth import User
+from model.auth import User, AuthCode
 from form.auth import RegisterForm, LoginForm, ProfileEditForm
 from utils.enc import encrypt_password
 from utils.time_ import ftime
+from utils.sms import sms
+import json
+
+
+class SmsHandler(BaseHandler):
+    def post(self):
+        message = {}
+        b = self.request.body
+        email = json.loads(b).get("email")
+        is_valid = validate_email(email)
+        if not is_valid:
+            message["error"] = "邮箱格式不正确!"
+            self.write(json.dumps(message))
+            return
+        u_email = self.db.query(User).filter(
+            User.email == email
+        ).first()
+        if u_email:
+            message["error"] = "此邮箱已被注册!"
+            self.write(json.dumps(message))
+            return
+
+        code = random.randint(100000, 999999)
+        data = {"name": "", "code": code}
+        res = sms(email, data)
+        print("res ===>", res)
+        if res['statusCode'] == 200:
+            authcode = AuthCode(
+                code=int(code),
+                email=email
+            )
+            self.db.add(authcode)
+            self.db.commit()
+
+            message["success"] = "验证码已发送!"
+            self.write(json.dumps(message))
 
 
 class RegisterHandler(BaseHandler):
 
     def get(self):
-        self.render('auth/register.html')
+        if self.current_user:
+            self.redirect('/')
+        form = RegisterForm(self)
+        self.render('auth/register.html', form=form)
 
     def post(self):
-        # print("-->", self.request.arguments)
         form = RegisterForm(self)
         if form.validate():
             err = {}
@@ -30,9 +70,14 @@ class RegisterHandler(BaseHandler):
             ).first()
             if u_email:
                 err["emial"] = ["邮箱{}已被占用".format(u_email.email)]
+            u_authcode = self.db.query(AuthCode).filter(
+                AuthCode.code == form.authcode.data,
+                AuthCode.email == form.email.data
+            ).first()
+            if not u_authcode:
+                err["authcode"] = ["验证码不匹配!"]
             if len(err) != 0:
                 self.render("auth/register.html", form=form, message=err)
-
             user = User(username=form.username.data, email=form.email.data)
             user.password = encrypt_password(form.password.data)
             user.img = 'default.jpg'
@@ -41,31 +86,37 @@ class RegisterHandler(BaseHandler):
             self.db.commit()
             self.redirect('/login')
         else:
-            self.render('auth/register.html', ftime=ftime, message=form.errors)
+            self.render('auth/register.html', ftime=ftime, form=form, message=form.errors)
 
 
 class LoginHandler(BaseHandler):
 
     def get(self):
-        self.render('auth/login.html')
+        if self.current_user:
+            self.redirect('/')
+        form = RegisterForm(self)
+        self.render('auth/login.html', form=form)
 
     def post(self):
         form = LoginForm(self)
         if form.validate():
+            err = {}
             user = self.db.query(User).filter_by(email=form.email.data).first()
+            if not user:
+                err["username"] = ['用户名密码错误!']
+                # self.render('auth/login.html', message=err)
+            if not user.validate_password(form.password.data):
+                err["username"] = ['用户名密码错误!']
+                self.render('auth/login.html', form=form, message=err)
             if user.is_lock:
                 err = '无权登陆!'
                 self.render('404.html', message=err)
-            if not user:
-                err = '用户名密码错误!'
-                self.render('auth/login.html', error=err)
-            if not user.validate_password(form.password.data):
-                err = '用户名密码错误!'
-                self.render('auth/login.html', error=err)
             self.set_secure_cookie("blog_user", str(user.id))
             user.last_login = datetime.datetime.now()
             self.db.commit()
-        self.redirect('/')
+            self.redirect('/')
+        else:
+            self.render('auth/login.html', ftime=ftime, form=form, message=form.errors)
 
 
 class LogoutHandler(BaseHandler):
@@ -135,6 +186,10 @@ class UploadHandler(BaseHandler):
     @authenticated
     def post(self):
         # print("====>", self.request.files)
+        find_file = self.request.files.get('file')
+        if find_file is None:
+            error = "请选择一张图片！"
+            self.render("auth/upload.html", message=error)
         file1 = self.request.files['file'][0]
         original_fname = file1['filename']
         # 分离文件名与扩展名

@@ -26,3 +26,18 @@ class User(ORMBase):
 
     def validate_password(self, raw_password):
         return check_password(raw_password, self.password)
+
+
+class AuthCode(ORMBase):
+
+    __tablename__ = 'auth_code'
+
+    id = Column(Integer, Sequence('auth_code_id_seq'), primary_key=True)
+    code = Column(Integer)
+    type = Column(String(32))
+    email = Column(String(64))
+    create = Column(DateTime(), default=datetime.datetime.now)
+
+    def __init__(self, code, email):
+        self.code = code
+        self.email = email

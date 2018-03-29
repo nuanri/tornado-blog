@@ -1,3 +1,41 @@
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+//注册发送验证码
+$( "#get-authcode-bt" ).one("click", function() {
+    // $(this).unbind("click");
+    console.log("111111")
+    // console.log("====>",JSON.stringify({"email": $("#email")[0].value }))
+    email =  $("#email")[0].value
+
+    $.ajax({
+        url: "auth/sms",
+        method: "POST",
+        data: JSON.stringify({"email": $("#email")[0].value }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+            console.log("22222")
+            console.log("data===>", data)
+            $("#reg-error-ajax").empty()
+            if (data.error)
+                $("#reg-error-ajax").append(data.error)
+            if (data.success)
+                $("#reg-error-ajax").empty()
+                $("#reg-error-ajax").append(data.success)
+                // $("#authcode")[0].value = data.authcode
+        },
+        failure: function(errMsg) {
+            console.log("errMsg ==>", errMsg)
+            alert(errMsg);
+        }
+    });
+})
+
+
+
 // $("#register-btn").click(function () {
 //
 //     email = $("#email")[0].value

@@ -11,6 +11,8 @@ handlers = [
     url(r"/profile", auth.ProfileHandler, name="auth:profile"),
     url(r"/profile/edit", auth.ProfileEditHandler, name="auth:profile:edit"),
     url(r"/upload", auth.UploadHandler, name="auth:upload"),
+    # 发送验证码
+    url(r"/auth/sms", auth.SmsHandler, name="auth:sms"),
 
     # 管理员权限
     url(r"/userlist", admin.UserlistHandler, name="admin:userlist"),
@@ -27,8 +29,4 @@ handlers = [
     url(r"/article/([0-9]+)", article.DetailHandler, name="article:detail"),
     url(r"/article/([0-9]+)/edit", article.EditHandler, name="article:edit"),
     url(r"/article/del/([0-9]+)", article.DeleteHandler, name="article:del"),
-
-    # 搜索
-    # url(r"/article/search", article.SearchHandler, name="article:search"),
-
 ]

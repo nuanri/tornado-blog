@@ -3,9 +3,14 @@ from wtforms import StringField, PasswordField, validators, TextField
 from custon_form import Form
 
 
+class SmsForm(Form):
+    email = TextField('Email Address', [validators.Length(min=6, max=35)])
+
+
 class RegisterForm(Form):
     username = StringField('Username', [validators.Length(min=6, max=32)])
     email = TextField('Email Address', [validators.Length(min=6, max=35)])
+    authcode = TextField('Auth Code', [validators.Length(min=6)])
     password = PasswordField(
         'New Password',
         [validators.Length(min=6, max=35), validators.Required()]
