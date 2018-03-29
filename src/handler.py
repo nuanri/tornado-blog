@@ -81,7 +81,7 @@ def administrator(method):
 
             # 用户不是管理员
             self.render('404.html', message='无权限!')
-            # return
+            return
 
         # # 用户没有登录,且请求为 GET, HEAD
         # if self.request.method in ("GET", "HEAD"):

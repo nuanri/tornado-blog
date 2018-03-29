@@ -49,6 +49,20 @@ a {
     background-color: #48cfad;
 }
 
+
+.btn-outline-info {
+    /* color: #17a2b8; */
+    color: #48cfad;
+    background-color: transparent;
+    background-image: none;
+    border-color: #48cfad;
+}
+
+.btn-outline-info:hover {
+    background-color: #48cfad;
+    border-color: #48cfad;
+}
+
 /* .text-white {
     color: #777!important;
 } */

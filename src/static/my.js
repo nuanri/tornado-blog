@@ -6,33 +6,54 @@ function validateEmail(email) {
 //注册发送验证码
 $( "#get-authcode-bt" ).one("click", function() {
     // $(this).unbind("click");
-    console.log("111111")
-    // console.log("====>",JSON.stringify({"email": $("#email")[0].value }))
     email =  $("#email")[0].value
 
     $.ajax({
         url: "auth/sms",
         method: "POST",
-        data: JSON.stringify({"email": $("#email")[0].value }),
+        data: JSON.stringify({"email": $("#email")[0].value, "code_type": "register" }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
-            console.log("22222")
-            console.log("data===>", data)
             $("#reg-error-ajax").empty()
             if (data.error)
                 $("#reg-error-ajax").append(data.error)
             if (data.success)
                 $("#reg-error-ajax").empty()
                 $("#reg-error-ajax").append(data.success)
-                // $("#authcode")[0].value = data.authcode
         },
         failure: function(errMsg) {
-            console.log("errMsg ==>", errMsg)
             alert(errMsg);
         }
     });
 })
+
+
+//忘记密码发送验证码
+$( "#get-forgetpassword-authcode-bt" ).one("click", function() {
+    // $(this).unbind("click");
+    email =  $("#email")[0].value
+
+    $.ajax({
+        url: "sms",
+        method: "POST",
+        data: JSON.stringify({"email": $("#email")[0].value, "code_type": "forget_password" }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+            $("#forgetpassword-error-ajax").empty()
+            if (data.error)
+                $("#forgetpassword-error-ajax").append(data.error)
+            if (data.success)
+                $("#forgetpassword-error-ajax").empty()
+                $("#forgetpassword-error-ajax").append(data.success)
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+})
+
 
 
 

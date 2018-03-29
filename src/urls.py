@@ -8,18 +8,19 @@ handlers = [
     url(r"/register", auth.RegisterHandler, name="auth:register"),
     url(r"/login", auth.LoginHandler, name="auth:login"),
     url(r"/logout", auth.LogoutHandler, name="auth:logout"),
-    url(r"/profile", auth.ProfileHandler, name="auth:profile"),
-    url(r"/profile/edit", auth.ProfileEditHandler, name="auth:profile:edit"),
-    url(r"/upload", auth.UploadHandler, name="auth:upload"),
+    url(r"/auth/profile", auth.ProfileHandler, name="auth:profile"),
+    url(r"/auth/profile/edit", auth.ProfileEditHandler, name="auth:profile:edit"),
+    url(r"/auth/upload", auth.UploadHandler, name="auth:upload"),
+    url(r"/auth/forget_password", auth.ForgetPasswordHandler, name="auth:forget_password"),
     # 发送验证码
     url(r"/auth/sms", auth.SmsHandler, name="auth:sms"),
 
     # 管理员权限
-    url(r"/userlist", admin.UserlistHandler, name="admin:userlist"),
-    url(r"/userinfo/([0-9]+)", admin.UserinfoHandler, name="admin:userinfo"),
-    url(r"/userinfo/([0-9]+)/edit", admin.UserinfoEditHandler, name="admin:userinfo:edit"),
+    url(r"/admin/userlist", admin.UserlistHandler, name="admin:userlist"),
+    url(r"/admin/userinfo/([0-9]+)", admin.UserinfoHandler, name="admin:userinfo"),
+    url(r"/admin/userinfo/([0-9]+)/edit", admin.UserinfoEditHandler, name="admin:userinfo:edit"),
 
-    url(r"/articlelist", admin.ArticlelistHandler, name="admin:articlelist"),
+    url(r"/admin/articlelist", admin.ArticlelistHandler, name="admin:articlelist"),
 
     # 首页
     url(r"/", article.IndexHandler, name="article:index"),

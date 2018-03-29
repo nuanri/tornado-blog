@@ -7,7 +7,12 @@ from tornado.web import authenticated
 
 from handler import BaseHandler
 from model.auth import User, AuthCode
-from form.auth import RegisterForm, LoginForm, ProfileEditForm
+from form.auth import (
+    RegisterForm,
+    LoginForm,
+    ProfileEditForm,
+    ForgetPasswordForm
+)
 from utils.enc import encrypt_password
 from utils.time_ import ftime
 from utils.sms import sms
@@ -24,14 +29,20 @@ class SmsHandler(BaseHandler):
             message["error"] = "邮箱格式不正确!"
             self.write(json.dumps(message))
             return
+        code_type = json.loads(b).get("code_type")
         u_email = self.db.query(User).filter(
             User.email == email
         ).first()
-        if u_email:
-            message["error"] = "此邮箱已被注册!"
-            self.write(json.dumps(message))
-            return
-
+        if str(code_type) == "register":
+            if u_email:
+                message["error"] = "此邮箱已被注册!"
+                self.write(json.dumps(message))
+                return
+        if str(code_type) == "forget_password":
+            if not u_email:
+                message["error"] = "无此邮箱!"
+                self.write(json.dumps(message))
+                return
         code = random.randint(100000, 999999)
         data = {"name": "", "code": code}
         res = sms(email, data)
@@ -39,7 +50,8 @@ class SmsHandler(BaseHandler):
         if res['statusCode'] == 200:
             authcode = AuthCode(
                 code=int(code),
-                email=email
+                email=email,
+                code_type=code_type
             )
             self.db.add(authcode)
             self.db.commit()
@@ -83,6 +95,7 @@ class RegisterHandler(BaseHandler):
             user.img = 'default.jpg'
             user.date_joined = datetime.datetime.now()
             self.db.add(user)
+            self.db.delete(u_authcode)
             self.db.commit()
             self.redirect('/login')
         else:
@@ -124,6 +137,39 @@ class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("blog_user")
         self.redirect('/')
+
+
+class ForgetPasswordHandler(BaseHandler):
+
+    def get(self):
+        if self.current_user:
+            self.redirect('/')
+        form = ForgetPasswordForm(self)
+        self.render('auth/forget_password.html', form=form)
+
+    def post(self):
+        form = ForgetPasswordForm(self)
+        if form.validate():
+            err = {}
+            get_user = self.db.query(User).filter(
+                User.email == form.email.data
+            ).first()
+            if not get_user:
+                err["emial"] = ["无此邮箱{}".format(get_user.email)]
+            u_authcode = self.db.query(AuthCode).filter(
+                AuthCode.code == form.authcode.data,
+                AuthCode.email == form.email.data
+            ).first()
+            if not u_authcode:
+                err["authcode"] = ["验证码不匹配!"]
+            if len(err) != 0:
+                self.render("auth/forget_password.html", form=form, message=err)
+            get_user.password = encrypt_password(form.new_password.data)
+            self.db.delete(u_authcode)
+            self.db.commit()
+            self.redirect('/login')
+        else:
+            self.render('auth/forget_password.html', ftime=ftime, form=form, message=form.errors)
 
 
 class ProfileHandler(BaseHandler):
@@ -203,7 +249,7 @@ class UploadHandler(BaseHandler):
         user = self.db.query(User).filter_by(id=self.current_user.id).first()
         user.img = final_filename
         self.db.commit()
-        self.redirect('/profile')
+        self.redirect('/auth/profile')
         # self.finish("file" + final_filename + " is uploaded")
         # output_file = open("static/uploads/" + original_fname, 'wb')
         # output_file.write(file1['body'])
