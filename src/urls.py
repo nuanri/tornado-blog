@@ -2,6 +2,7 @@ from tornado.web import url
 from view import auth
 from view import admin
 from view import article
+import tornado
 
 handlers = [
     # 登录权限
@@ -30,4 +31,7 @@ handlers = [
     url(r"/article/([0-9]+)", article.DetailHandler, name="article:detail"),
     url(r"/article/([0-9]+)/edit", article.EditHandler, name="article:edit"),
     url(r"/article/del/([0-9]+)", article.DeleteHandler, name="article:del"),
+
+    # 无此页面，返回404
+    url(r".*", auth.PageNotFoundHandler),
 ]

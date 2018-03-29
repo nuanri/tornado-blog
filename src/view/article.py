@@ -63,7 +63,8 @@ class DetailHandler(BaseHandler):
         article = self.db.query(Article).filter_by(id=ID).first()
         if not article:
             self.render('404.html', message="无此文章！")
-        self.render("article/detail.html", ftime=ftime, article=article)
+        else:
+            self.render("article/detail.html", ftime=ftime, article=article)
 
 
 class EditHandler(BaseHandler):
@@ -75,9 +76,11 @@ class EditHandler(BaseHandler):
         article = self.db.query(Article).get(ID)
         if article.user != self.current_user:
             self.render('404.html', message="无此权限！")
+            return
         article = self.db.query(Article).filter_by(id=ID).first()
         if not article:
             self.render('404.html', message="无此文章！")
+            return
         form.title.data = article.title
         form.content.data = article.content
         form.is_public.data = article.is_public
@@ -107,6 +110,7 @@ class DeleteHandler(BaseHandler):
         article = self.db.query(Article).filter_by(id=ID).first()
         if not article:
             self.render('404.html', message="无此文章！")
+            return
         self.db.delete(article)
         self.db.commit()
         self.redirect('/')

@@ -6,7 +6,9 @@
     <div class="col-md-3">
       <!-- <img src="${ static_url('uploads/') } self.current_user.img" alt="..." class="img-thumbnail"> -->
       <img src="${ static_url('uploads/')}${ current_user.img }" alt="..." class="img-thumbnail">
-      <a href="${ reverse_url('auth:upload')}" class="btn btn-primary">更换头像</a>
+      <div class="change-img">
+        <a href="${ reverse_url('auth:upload')}">更换头像</a>
+      </div>
     </div>
 
     <div class="col-md-9">
@@ -20,7 +22,7 @@
         <tr><td>加入时间</td><td>${ ftime(current_user.date_joined) }</td></tr>
         <tr><td>登陆时间</td><td>${ ftime(current_user.last_login) }</td></tr>
       </table>
-      <a href="${ reverse_url('auth:profile:edit')}" class="btn btn-primary">编辑</a>
+      <a href="${ reverse_url('auth:profile:edit')}">编辑</a>
     </div>
 
   </div>

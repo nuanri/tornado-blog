@@ -2,5 +2,9 @@
 
 <%block name="content">
 
-<div>${ message }</div>
+<div id="no_page">
+  <p>${ message }</p>
+  <a href="${reverse_url("article:index")}">返回首页</a>
+</div>
+
 </%block>

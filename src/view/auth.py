@@ -4,6 +4,7 @@ import random
 from validate_email import validate_email
 
 from tornado.web import authenticated
+import tornado
 
 from handler import BaseHandler
 from model.auth import User, AuthCode
@@ -254,3 +255,12 @@ class UploadHandler(BaseHandler):
         # output_file = open("static/uploads/" + original_fname, 'wb')
         # output_file.write(file1['body'])
         # output_file.close
+
+
+class PageNotFoundHandler(BaseHandler):
+    def prepare(self):
+        self.set_status(404)
+        message = "无此页面!"
+        self.render("404.html", message=message)
+
+tornado.web.ErrorHandler = PageNotFoundHandler

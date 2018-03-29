@@ -15,10 +15,8 @@
       <div class="card mb-4">
         <!-- <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> -->
         <div class="card-body">
-          <h2 class="card-title">${ a.title }</h2>
-          ${ a.abstract}
-
-
+          <a href="${reverse_url('article:detail', a.id)}"><h3 class="card-title article-title">${ a.title }</h3></a>
+          <div>${ a.abstract}</div>
           <a href="${reverse_url('article:detail', a.id)}">......</a>
         <div class="card-footer text-muted">
           <span>写于 ${ftime(a.created)}</span>
