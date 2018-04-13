@@ -7,6 +7,7 @@ def convert_html(body):
         body,
         extensions,
         safe_mode=True,
+        # safe_mode='escape',
         enable_attributes=False
     )
 

@@ -64,6 +64,8 @@ class DetailHandler(BaseHandler):
         if not article:
             self.render('404.html', message="无此文章！")
         else:
+            article.view_count += 1
+            self.db.commit()
             self.render("article/detail.html", ftime=ftime, article=article)
 
 

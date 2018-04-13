@@ -14,7 +14,13 @@ from model.auth import User
 class BaseHandler(tornado.web.RequestHandler):
 
     lookup = mako.lookup.TemplateLookup(
-        ["./templates"], input_encoding='utf-8', output_encoding='utf-8')
+        ["./templates"],
+        input_encoding='utf-8',
+        output_encoding='utf-8',
+        # 下面的选项是html转义
+        # default_filters=['html_escape'],
+        # imports=['from mako.filters import html_escape']
+    )
 
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(

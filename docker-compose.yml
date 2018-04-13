@@ -21,3 +21,5 @@ services:
       POSTGRES_DB: blog
       POSTGRES_USER: blog
       POSTGRES_PASSWORD: blog
+    # volumes:
+    #     - "/data/product/blog/db:/var/lib/postgresql/data"

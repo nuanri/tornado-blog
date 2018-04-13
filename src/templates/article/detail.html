@@ -31,7 +31,7 @@ ${ article.content_html }
 </div>
 <hr>
 
-<div>
+<div class="detail-a">
 % if article.user == current_user:
   <a href="${reverse_url('article:edit', article.id)}">编辑</a>
 % endif

@@ -11,9 +11,9 @@ textarea[name=content] {
 
 }
 
-#content, .dropdown {
+/* #content, .dropdown {
     color: #777;
-}
+} */
 
 a:hover {
     color: #777;
@@ -63,6 +63,7 @@ a {
 
 .article-title:hover{
     color: #212529;
+    /* color: #48cfad; */
 }
 
 .article-title{
@@ -78,4 +79,9 @@ a {
     text-align: center;
     padding: 50px;
     font-size: 1.2rem;
+}
+
+
+.detail-a {
+    padding: 80px 0px 40px 0px;
 }
