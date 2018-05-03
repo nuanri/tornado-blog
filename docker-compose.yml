@@ -7,13 +7,13 @@ services:
       PYTHONPATH: /work
       NOSE_NOCAPTURE: 1
     ports:
-      - "8888:8888"
+      - "8888:80"
     volumes:
       - ./src:/work
     tty: true
 
   postgres:
-    image: postgres
+    image: postgres:10.3
     restart: always
     ports:
       - "5432:5432"
@@ -23,3 +23,17 @@ services:
       POSTGRES_PASSWORD: blog
     # volumes:
     #     - "/data/product/blog/db:/var/lib/postgresql/data"
+
+  nginx:
+    restart: always
+    image: nginx:1.13.12-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - blog:blog
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      # - ./log:/var/log/nginx
+      # - ./www:/var/www
+      - /etc/letsencrypt:/etc/letsencrypt

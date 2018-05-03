@@ -35,8 +35,10 @@ ${ article.content_html }
 % if article.user == current_user:
   <a href="${reverse_url('article:edit', article.id)}">编辑</a>
 % endif
-% if (article.user == current_user) or (article.user.is_admin == True):
-  <a style="padding: 0px 25px" href="${reverse_url('article:del', article.id)}">删除</a>
+% if current_user:
+  % if (article.user == current_user or current_user.is_admin == True):
+    <a style="padding: 0px 25px" href="${reverse_url('article:del', article.id)}">删除</a>
+  % endif
 % endif
 </div>
 
