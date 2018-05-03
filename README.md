@@ -14,7 +14,7 @@ docker-compose exec blog bash
 
 ### 进入 `src/management` 目录, 创建数据库结构
 
-````
+```
 python rsyncdb.py
 ```
 ### 进入`src` 目录，启动 web server
